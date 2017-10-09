@@ -8,6 +8,6 @@ Lesen Sie sich den Wikipedia-Artikel [Normalisierung](https://de.wikipedia.org/w
 ### Aufgabe 2
 Erstellen Sie mittels [Dia](http://dia-installer.de/index.html.de)  oder mit Oracle's [Data Modeler](http://www.oracle.com/technetwork/developer-tools/datamodeler/overview/index.html) ein Datenbankmodell, dass die Attribute (Felder) ihrer in Aufgabe 1 erstellten Tabellen abbildet. Berücksichtigen sie, dass Attribute unterschiedliche [Datentypen](http://www.datenbank-sql.de/oracle-datentypen.htm) oder Restriktionen  (`NOT NULL`, `NULL`, `UNIQUE`, `PRIMARYKEY`, `FOREIGNKEY`) besitzen können.
 
-
+![Datenbankmodell](./img/datamodler_schema.png)
 
 
