@@ -20,11 +20,12 @@ Nehme dir die Oracle [Dokumentation](https://docs.oracle.com/cd/B28359_01/server
 Der Datentyp `NUMBER` ermöglicht das speichern von positiven als auch negativen Ganzzahlen und Fließkommazahlen. Die Werte in den Klammern haben unterschiedliche Bedeutungen. Die erste Stelle in der Klammer steht für die Gesamte Anzahl von Zahlen und die zweite Stelle, wie viele Zahlen hinter dem Komma stehen.
 
 Einige Beispiele:
-| Deklaration   | Beispielmöglichkeiten                                                             |
-| ------------- | --------------------------------------------------------------------------------- |
-| NUMBER(38,0)  | -99999999999999999999999999999999999999 - 99999999999999999999999999999999999999  |
-| NUMBER(3,2)   | 1.81, 9.74, 0.54                                                                  |
-| NUMBER(5,2)   | 842.52, 965.45, 14.45                                                             |
+
+| Deklaration   | Beispielmöglichkeiten                   |
+| ------------- | --------------------------------------- |
+| NUMBER(38,0)  | 9999999999999999999999999999999999999   |
+| NUMBER(3,2)   | 1.81, 9.74, 0.54                        |
+| NUMBER(5,2)   | 842.52, 965.45, 14.45                   |
 
 ### Aufgabe 2
 Was bedeuten die durchgezogenen Linien, die zwischen einigen Tabellen abgebildet sind?
