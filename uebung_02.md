@@ -37,7 +37,7 @@ Was bedeuten die durchgezogenen Linien, die zwischen einigen Tabellen abgebildet
 Was bedeutet die gestrichelte Linie, die zwischen der Tabelle `ACC_VEHIC` und `GAS_STATION` abgebildet ist?
 
 #### Lösung
-Die durchgezogene Linie bildet eine Beziehung zwischen Tabellen ab. Die Beziehung muss *nicht* beim Anlegen eines neuen Datensatzes ausgefüllt werden.
+Die durchgezogene Linie bildet eine Beziehung zwischen Tabellen ab. Die Beziehung muss **nicht** beim Anlegen eines neuen Datensatzes ausgefüllt werden.
 
 ### Aufgabe 4
 Die folgende Abbildung beschreibt eine Beziehung zwischen Tabellen. Sie wird auch `n` zu `m` Beziehung genannt. Beschreibe kurz die Bedeutung dieser Beziehung.
@@ -45,6 +45,7 @@ Nehme dir diesen [Artikel](https://glossar.hs-augsburg.de/Beziehungstypen) zu Hi
 
 ![n-to-m-relationship](./img/n-to-m-relationship.png)
 
+#### Lösung
 Eine `n` zu `m` Beziehung beschreibt, dass `n` Datensätze mit `m` Datensätze verknüpft werden können. Als Beispiel kann hier eine Person mehrere Hobbys haben. Die Verknüpfung welche Hobbies eine Person hat wird in der Tabelle `PERSON_HOBBY` abgebildet.
 
 ### Aufgabe 5
