@@ -21,6 +21,7 @@ Der Datentyp `NUMBER` ermöglicht das speichern von positiven als auch negativen
 
 Einige Beispiele:
 | Deklaration   | Beispielmöglichkeiten                                                             |
+| ------------- | --------------------------------------------------------------------------------- |
 | NUMBER(38,0)  | -99999999999999999999999999999999999999 - 99999999999999999999999999999999999999  |
 | NUMBER(3,2)   | 1.81, 9.74, 0.54                                                                  |
 | NUMBER(5,2)   | 842.52, 965.45, 14.45                                                             |
