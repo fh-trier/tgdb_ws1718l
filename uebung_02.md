@@ -67,7 +67,8 @@ Gebe alle Datensätze der Tabelle `ACCOUNT` aus.
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT *
+FROM account;
 ```
 
 ### Aufgabe 8
@@ -75,7 +76,8 @@ Modifiziere Aufgabe 7 so, dass nur die Spalte `ACCOUNT_ID` ausgegeben wird.
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT account_id
+FROM account;
 ```
 
 ### Aufgabe 9
@@ -83,7 +85,8 @@ Gebe alle Spalten der Tabelle `VEHICLE` aus.
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT *
+FROM vehicle;
 ```
 
 ### Aufgabe 10
@@ -91,7 +94,12 @@ Kombiniere Aufgabe 7 und 9 so, dass nur Personen (`ACCOUNT`) angezeigt werden, d
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT surname, forename
+FROM account
+WHERE account_id IN (
+  SELECT account_id
+  FROM vehicle
+);
 ```
 
 ### Aufgabe 11
@@ -99,7 +107,13 @@ Modifizierde die Aufgabe 10 so, dass nur die Person mit der `ACCOUNT_ID` = `7` a
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT surname, forename
+FROM account
+WHERE account_id IN (
+  SELECT account_id
+  FROM vehicle
+)
+AND account_id = 7;
 ```
 
 ### Aufgabe 12
@@ -108,7 +122,8 @@ Erstelle für dich einen neuen Benutzer.
 
 #### Lösung
 ```sql
-Deine Lösung
+INSERT INTO account (account_id, surname, forename, email, c_date, d_date)
+VALUES (999, 'Pesch', 'Markus', 'peschm@fh-trier.de', SYSDATE, SYSDATE);
 ```
 
 ### Aufgabe 13
@@ -116,7 +131,17 @@ Erstelle für deinen neuen Benutzer ein neues Auto. Dieses Auto dient als Vorlag
 
 #### Lösung
 ```sql
-Deine Lösung
+-- VEHICLE_TYPE_ID = 1 (PKW)
+SELECT vehicle_type_id
+FROM vehicle_type;
+
+-- PRODUCER_ID = 4 (Volvo)
+SELECT *
+FROM producer;
+
+-- Erstellen des Autos
+INSERT INTO vehicle
+VALUES (999, 1, 4, 'S80', NULL, 150, SYSDATE, '5', SYSDATE, SYSDATE);
 ```
 
 ### Aufgabe 14
@@ -124,7 +149,8 @@ Verknüpfe das aus Aufgabe 13 erstellte neue Auto mit deinem neuen Benutzer aus 
 
 #### Lösung
 ```sql
-Deine Lösung
+INSERT INTO acc_vehic (acc_vehic_id, account_id, vehicle_id, identicator, alias, buy_price, buy_kilometer, sold_price, sold_kilometer, registration, checkout, default_gas_station, c_date, u_date)
+VALUES (999, 999, 999, 'TR:YZ:1', 'Meine Karre', 5000.00, 15240, NULL, NULL, SYSDATE, NULL, NULL, SYSDATE, SYSDATE);
 ```
 
 ### Aufgabe 15
@@ -132,7 +158,9 @@ Deine Lösung
 
 #### Lösung
 ```sql
-Deine Lösung
+UPDATE account
+SET surname='Zimmermann'
+WHERE account_id=7;
 ```
 
 ### Aufgabe 16
