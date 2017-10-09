@@ -17,19 +17,25 @@ Schaue dir das Datenbankmodell an. Wofür steht hinter dem Datentyp `NUMBER` die
 Nehme dir die Oracle [Dokumentation](https://docs.oracle.com/cd/B28359_01/server.111/b28318/datatype.htm#CNCPT012) zu Hilfe.
 
 #### Lösung
-Deine schritliche Antwort.
+Der Datentyp `NUMBER` ermöglicht das speichern von positiven als auch negativen Ganzzahlen und Fließkommazahlen. Die Werte in den Klammern haben unterschiedliche Bedeutungen. Die erste Stelle in der Klammer steht für die Gesamte Anzahl von Zahlen und die zweite Stelle, wie viele Zahlen hinter dem Komma stehen.
+
+Einige Beispiele:
+| Deklaration   | Beispielmöglichkeiten                                                             |
+| NUMBER(38,0)  | -99999999999999999999999999999999999999 - 99999999999999999999999999999999999999  |
+| NUMBER(3,2)   | 1.81, 9.74, 0.54                                                                  |
+| NUMBER(5,2)   | 842.52, 965.45, 14.45                                                             |
 
 ### Aufgabe 2
 Was bedeuten die durchgezogenen Linien, die zwischen einigen Tabellen abgebildet sind?
 
 #### Lösung
-Deine schriftliche Antwort.
+> Deine schriftliche Antwort.
 
 ### Aufgabe 3
 Was bedeutet die gestrichelte Linie, die zwischen der Tabelle `ACC_VEHIC` und `GAS_STATION` abgebildet ist?
 
 #### Lösung
-Deine schriftliche Antwort.
+Die durchgezogene Linie bildet eine Beziehung zwischen Tabellen ab. Die Beziehung muss *nicht* beim Anlegen eines neuen Datensatzes ausgefüllt werden.
 
 ### Aufgabe 4
 Die folgende Abbildung beschreibt eine Beziehung zwischen Tabellen. Sie wird auch `n` zu `m` Beziehung genannt. Beschreibe kurz die Bedeutung dieser Beziehung.
@@ -37,20 +43,20 @@ Nehme dir diesen [Artikel](https://glossar.hs-augsburg.de/Beziehungstypen) zu Hi
 
 ![n-to-m-relationship](./img/n-to-m-relationship.png)
 
-Deine schriftliche Antwort.
+Eine `n` zu `m` Beziehung beschreibt, dass `n` Datensätze mit `m` Datensätze verknüpft werden können. Als Beispiel kann hier eine Person mehrere Hobbys haben. Die Verknüpfung welche Hobbies eine Person hat wird in der Tabelle `PERSON_HOBBY` abgebildet.
 
 ### Aufgabe 5
 Was bedeutet der Buchstabe `P` und `F` neben den Attributen von Tabellen?
 
 #### Lösung
-Deine schriftliche Lösung.
+Das `P` steht für Primary-Key und `F` steht für Foreign-Key.
 
 ### Aufgabe 6
 Importiere die SQL-Dump-Datei in dein eigenes Schema. Wie lautet dazu der Befehl um dem import zu starten?
 
 #### Lösung
 ```sql
-Deine Lösung
+start /home/markus/workspace/github.com/volker-raschek/tgdb_ws1718/sql/Tutorium.sql
 ```
 
 ### Aufgabe 7
