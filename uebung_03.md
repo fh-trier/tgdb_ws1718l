@@ -32,7 +32,7 @@ FROM gas_station gs
 
 -- WHERE
 SELECT provider.provider_name, gas_station.street, address.plz, address.city, country.country_name, country.duty_amount
-FROM gas_station
+FROM address, country, gas_station, provider
 WHERE gas_station.address_id = address.address_id
 AND gas_station.provider_id = provider.provider_id
 AND gas_station.country_id = country.country_id;
