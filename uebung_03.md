@@ -26,7 +26,7 @@ Erstelle eine `INNER JOIN` (optional `WHERE`) Abfrage um die Beziehungen zwische
 -- INNER JOIN
 SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, c.duty_amount
 FROM gas_station gs
-  INNER JOIN producer p ON (p.provider_id = gs.provider_id)
+  INNER JOIN provider p ON (p.provider_id = gs.provider_id)
   INNER JOIN country c ON (c.country_id = gs.country_id)
   INNER JOIN address a ON (a.address_ID = gs.address_ID);
 
@@ -35,7 +35,7 @@ SELECT provider.provider_name, gas_station.street, address.plz, address.city, co
 FROM gas_station
 WHERE gas_station.address_id = address.address_id
 AND gas_station.provider_id = provider.provider_id
-AND gas_station.country_id = country.country_id
+AND gas_station.country_id = country.country_id;
 ```
 
 ### Aufgabe 2
@@ -43,7 +43,23 @@ Suche alle Tankstellen raus, deren Straßenname an zweiter Stelle ein `U` haben 
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, c.duty_amount
+FROM gas_station gs
+ INNER JOIN provider p ON (p.provider_id = gs.provider_id)
+ INNER JOIN country c ON (c.country_id = gs.country_id)
+ INNER JOIN address a ON (a.address_ID = gs.address_ID)
+WHERE (
+  gs.street LIKE '_U%'
+  OR gs.street LIKE '_u%'
+);
+
+-- Optional
+SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, c.duty_amount
+ FROM gas_station gs
+ INNER JOIN provider p ON (p.provider_id = gs.provider_id)
+ INNER JOIN country c ON (c.country_id = gs.country_id)
+ INNER JOIN address a ON (a.address_ID = gs.address_ID)
+WHERE REGEXP_LIKE(gs.street, '^[A-Za-z][Uu].*');
 ```
 
 ### Aufgabe 3
@@ -51,7 +67,16 @@ Suche alle Tankstellen raus, die sich in Trier befinden.
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, c.duty_amount
+FROM gas_station gs
+  INNER JOIN provider p ON (p.provider_id = gs.provider_id)
+  INNER JOIN country c ON (c.country_id = gs.country_id)
+  INNER JOIN address a ON (a.address_ID = gs.address_ID)
+WHERE a.plz IN (
+  SELECT plz
+  FROM address
+  WHERE city = 'Trier'
+);
 ```
 
 #### Aufgabe 4
@@ -59,7 +84,36 @@ Füge eine fiktive Tankstelle hinzu. Sie darf auf keine bestehenden Informatione
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Neues Land anlegen
+INSERT INTO country (country_id, country_name, duty_amount)
+VALUES (MAX(country_id) + 1, 'Niederlande', 0.2);
+
+-- Neuen Anbieter anlegen
+INSERT INTO provider (provider_id, provider_name)
+VALUES(MAX(provider_id) + 1, 'Petrol');
+
+-- Neue Addresse anlegen
+INSERT INTO address (address_id, plz, city)
+VALUES(MAX(address_id) + 1, '9999', 'Amsterdam');
+
+-- Neue Tankstelle anlegen
+INSERT INTO gas_station (gas_station_id, provider_id, country_id, address_id, street)
+VALUES(
+  MAX(gas_station_id) + 1,
+  (
+    SELECT provider_id
+    FROM provider
+    WHERE provider_name = 'Petrol'),
+  ( SELECT country_id
+    FROM country
+    WHERE country_name = 'Niederlande'
+  ),
+  ( SELECT address_id
+    FROM address
+    WHERE plz=9999
+    AND city='Amsterdam'
+  ),
+  'Am Hafen 1');
 ```
 
 ### Aufgabe 5
@@ -72,7 +126,7 @@ Erstelle eine INNER JOIN (optional `WHERE`) Abfrage um die Beziehung zwischen de
 
 #### Lösung
 ```sql
-Deine Lösung
+
 ```
 
 ### Aufgabe 6
