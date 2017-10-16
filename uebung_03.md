@@ -126,7 +126,7 @@ Erstelle eine INNER JOIN (optional `WHERE`) Abfrage um die Beziehung zwischen de
 
 #### Lösung
 ```sql
-SELECT a.forname, a.surname, vt.vehicle_type_name, p.producer_name, g.gas_name
+SELECT a.forename, a.surname, vt.vehicle_type_name, v.version, v.build_year, p.producer_name, g.gas_name
 FROM account a
   INNER JOIN acc_vehic accv ON (a.account_id = accv.account_id)
   INNER JOIN vehicle v ON (v.vehicle_id = accv.vehicle_id)
