@@ -126,7 +126,13 @@ Erstelle eine INNER JOIN (optional `WHERE`) Abfrage um die Beziehung zwischen de
 
 #### Lösung
 ```sql
-
+SELECT a.forname, a.surname, vt.vehicle_type_name, p.producer_name, g.gas_name
+FROM account a
+  INNER JOIN acc_vehic accv ON (a.account_id = accv.account_id)
+  INNER JOIN vehicle v ON (v.vehicle_id = accv.vehicle_id)
+  INNER JOIN vehicle_type vt ON (v.vehicle_type_id = vt.vehicle_type_id)
+  INNER JOIN producer p ON (v.producer_id = p.producer_id)
+  LEFT JOIN gas g ON (v.default_gas_id = g.gas_id);
 ```
 
 ### Aufgabe 6
