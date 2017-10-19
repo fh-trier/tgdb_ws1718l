@@ -212,7 +212,16 @@ Liste alle Benutzer (Vorname und Nachname) mit Fahrzeug (Hersteller, Modell, Ali
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT a.forename "Vorname", a.surname "Nachname", p.producer_name "Hersteller", vt.vehicle_type_name "Modell", accv.alias "Alias"
+FROM account a
+  INNER JOIN acc_vehic accv ON (a.account_id = accv.account_id)
+  INNER JOIN vehicle v ON (accv.vehicle_id = v.vehicle_id)
+  INNER JOIN vehicle_type vt ON (vt.vehicle_type_id = v.vehicle_type_id)
+  INNER JOIN producer p ON (v.producer_id = p.producer_id)
+WHERE accv.acc_vehic_id NOT IN (
+  SELECT acc_vehic_id
+  FROM receipt
+);
 ```
 
 ### Aufgabe 10
@@ -220,7 +229,12 @@ Liste alle Benutzer auf, die mit einem Fahrzeug schonmal im Außland tanken ware
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT a.forename "Vorname", a.surname "Nachname"
+FROM account a
+  INNER JOIN receipt r ON (r.account_id = a.account_id)
+  INNER JOIN gas_station gs ON (r.gas_station_id = gs.gas_station_id)
+  INNER JOIN country c ON (gs.country_id = c.country_id)
+WHERE c.country_name <> 'Deutschland';
 ```
 
 ### Aufgabe 11
