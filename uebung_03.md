@@ -140,7 +140,16 @@ Welche Fahrzeuge wurden noch keinem Benutzer zugewiesen? Gebe über das Fahrzeug
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT vt.vehicle_type_name "Typ", p.producer_name "Hersteller", v.version "Modell", v.build_year "Baujahr", g.gas_name "Kraftstoff"
+FROM Vehicle v
+    INNER JOIN producer p ON (v.producer_id = p.producer_id)
+    INNER JOIN vehicle_type vt ON (v.vehicle_type_id = vt.vehicle_type_id)
+    INNER JOIN gas g ON (v.default_gas_id = g.gas_id)
+WHERE v.vehicle_id NOT IN (
+    SELECT  vehicle_id
+    FROM    acc_vehic accv
+        INNER JOIN account a ON (a.account_id = accv.account_id)
+);
 ```
 
 ### Aufgabe 7
