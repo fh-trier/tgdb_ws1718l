@@ -142,13 +142,13 @@ Welche Fahrzeuge wurden noch keinem Benutzer zugewiesen? Gebe über das Fahrzeug
 ```sql
 SELECT vt.vehicle_type_name "Typ", p.producer_name "Hersteller", v.version "Modell", v.build_year "Baujahr", g.gas_name "Kraftstoff"
 FROM Vehicle v
-    INNER JOIN producer p ON (v.producer_id = p.producer_id)
-    INNER JOIN vehicle_type vt ON (v.vehicle_type_id = vt.vehicle_type_id)
-    INNER JOIN gas g ON (v.default_gas_id = g.gas_id)
+  INNER JOIN producer p ON (v.producer_id = p.producer_id)
+  INNER JOIN vehicle_type vt ON (v.vehicle_type_id = vt.vehicle_type_id)
+  INNER JOIN gas g ON (v.default_gas_id = g.gas_id)
 WHERE v.vehicle_id NOT IN (
-    SELECT  vehicle_id
-    FROM    acc_vehic accv
-        INNER JOIN account a ON (a.account_id = accv.account_id)
+  SELECT  vehicle_id
+  FROM    acc_vehic accv
+    INNER JOIN account a ON (a.account_id = accv.account_id)
 );
 ```
 
@@ -157,7 +157,38 @@ Verknüpfe eines der Autos aus Aufgabe 6 mit deinem Benutzernamen. Verwende dazu
 
 #### Lösung
 ```
-Deine Lösung
+INSERT INTO acc_vehic
+VALUES (
+  (
+    SELECT MAX(acc_vehic_id) + 1
+    FROM acc_vehic
+  ),
+  (
+    SELECT account_id
+    FROM account
+    WHERE email = 'peschm@fh-trier.de'
+  ),
+  (
+    SELECT MAX(v.vehicle_id)
+    FROM Vehicle v
+    WHERE v.vehicle_id NOT IN (
+      SELECT  vehicle_id
+      FROM    acc_vehic accv
+        INNER JOIN account a ON (a.account_id = accv.account_id)
+    )
+  ),
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  SYSDATE,
+  SYSDATE
+);
 ```
 
 ### Aufgabe 8
@@ -165,7 +196,15 @@ An welcher Tankstelle wurde noch nie getankt? Gebe zu den Tankstellen die Inform
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.provider_name "Anbieter", gs.street "Straße", a.plz "PLZ", a.city "Stadt", c.country_name "Land"
+FROM gas_station gs
+  INNER JOIN address a ON (gs.address_id = a.address_id)
+  INNER JOIN provider p ON (p.provider_id = gs.provider_id)
+  INNER JOIN country c ON (c.country_id = gs.country_id)
+WHERE gs.gas_station_id NOT IN (
+  SELECT gas_station_id
+  FROM receipt
+);
 ```
 
 ### Aufgabe 9
