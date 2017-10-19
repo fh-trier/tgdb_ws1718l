@@ -242,7 +242,11 @@ Wie viele Benutzer haben einen LKW registriert?
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT COUNT(DISTINCT(accv.account_id)) "Anzahl"
+FROM acc_vehic accv
+  INNER JOIN vehicle v ON (accv.vehicle_id = v.vehicle_id)
+  INNER JOIN vehicle_type vt ON (vt.vehicle_type_id = v.vehicle_type_id)
+WHERE vt.vehicle_type_name = 'LKW';
 ```
 
 ### Aufgabe 12
@@ -266,7 +270,23 @@ Aktualisiere den Steuersatz aller Belege auf den Steuersatz des Landes, indem di
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT COUNT(a.account_id) "Anzahl"
+FROM account a
+WHERE a.account_id IN (
+  SELECT accv.account_id
+  FROM acc_vehic accv
+    INNER JOIN vehicle v ON (v.vehicle_id = accv.vehicle_id)
+    INNER JOIN vehicle_type vt ON (vt.vehicle_type_id = v.vehicle_type_id)
+  WHERE vt.vehicle_type_name = 'LKW'
+)
+AND a.account_id IN (
+  SELECT accv.account_id
+  FROM acc_vehic accv
+    INNER JOIN vehicle v ON (v.vehicle_id = accv.vehicle_id)
+    INNER JOIN vehicle_type vt ON (vt.vehicle_type_id = v.vehicle_type_id)
+  WHERE vt.vehicle_type_name = 'PKW'
+);
+
 ```
 
 
