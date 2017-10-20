@@ -59,7 +59,7 @@ SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, c.duty_amount
  INNER JOIN provider p ON (p.provider_id = gs.provider_id)
  INNER JOIN country c ON (c.country_id = gs.country_id)
  INNER JOIN address a ON (a.address_ID = gs.address_ID)
-WHERE REGEXP_LIKE(gs.street, '^[A-Za-z][Uu].*');
+WHERE REGEXP_LIKE(gs.street, '^.[Uu].*$');
 ```
 
 ### Aufgabe 3
@@ -72,11 +72,7 @@ FROM gas_station gs
   INNER JOIN provider p ON (p.provider_id = gs.provider_id)
   INNER JOIN country c ON (c.country_id = gs.country_id)
   INNER JOIN address a ON (a.address_ID = gs.address_ID)
-WHERE a.plz IN (
-  SELECT plz
-  FROM address
-  WHERE city = 'Trier'
-);
+WHERE a.city = 'Trier';
 ```
 
 #### Aufgabe 4
@@ -126,6 +122,15 @@ Erstelle eine INNER JOIN (optional `WHERE`) Abfrage um die Beziehung zwischen de
 
 #### Lösung
 ```sql
+-- SQL-Plus Einstellung
+COLUMN FORNAME FORMAT a12
+COLUMN SURNAME FORMAT a12
+COLUMN VEHICLE_TYPE_NAME FORMAT a8
+COLUMN VERSION FORMAT a12
+COLUMN PRODUCER_NAME FORMAT a12
+COLUMN GAS_NAME FORMAT a8
+
+-- Abfrage
 SELECT a.forename, a.surname, vt.vehicle_type_name, v.version, v.build_year, p.producer_name, g.gas_name
 FROM account a
   INNER JOIN acc_vehic accv ON (a.account_id = accv.account_id)
@@ -254,22 +259,6 @@ Wie viele Benutzer haben einen PKW und einen LKW registriert?
 
 #### Lösung
 ```sql
-Deine Lösung
-```
-
-### Aufgabe 13
-Führe den Patch `02_patch.sql`, der sich im Verzeichnis `sql` befindet, in deiner Datenbank aus. Wie lautet der Befehlt zum import?
-
-#### Lösung
-```sql
-Deine Lösung
-```
-
-### Aufgabe 14
-Aktualisiere den Steuersatz aller Belege auf den Steuersatz des Landes, indem die Kunden getankt haben.
-
-#### Lösung
-```sql
 SELECT COUNT(a.account_id) "Anzahl"
 FROM account a
 WHERE a.account_id IN (
@@ -286,7 +275,28 @@ AND a.account_id IN (
     INNER JOIN vehicle_type vt ON (vt.vehicle_type_id = v.vehicle_type_id)
   WHERE vt.vehicle_type_name = 'PKW'
 );
+```
 
+### Aufgabe 13
+Führe den Patch `02_patch.sql`, der sich im Verzeichnis `sql` befindet, in deiner Datenbank aus. Wie lautet der Befehlt zum import?
+
+#### Lösung
+```sql
+start ~/workspace/github.com/volker-raschek/tgdb_ws1718l/sql/02_patch.sql
+```
+
+### Aufgabe 14
+Aktualisiere den Steuersatz aller Belege auf den Steuersatz des Landes, indem die Kunden getankt haben.
+
+#### Lösung
+```sql
+UPDATE receipt r
+SET duty_amount = (
+  SELECT c.duty_amount
+  FROM country c
+    INNER JOIN gas_station gs ON (c.country_id = gs.country_id)
+  WHERE gs.gas_station_id = r.gas_station_id
+);
 ```
 
 
