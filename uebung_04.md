@@ -20,7 +20,7 @@ Um genauere Informationen und Prognosen mit Data Mining Werkzeugen zu schöpfen,
 CREATE TABLE ACC_ADD (
   ACC_ADD_ID  NUMBER(38) NOT NULL,
   ACCOUNT_ID  NUMBER(38) NOT NULL,
-  STREET      VARCHAR2(32) NO NULL,
+  STREET      VARCHAR2(32) NOT NULL,
   ADDRESS_ID  NUMBER(38) NOT NULL,
   COUNTRY_ID  NUMBER(38) NOT NULL
 );
