@@ -20,3 +20,5 @@ target
 # Generarted tex-files from pandoc
 **/*.tex
 
+# pdf documents
+**/uebung_*.pdf
