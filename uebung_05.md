@@ -37,5 +37,21 @@ Welche Personen haben kein Fahrzeug? Löse dies einmal mit `LEFT JOIN` und `RIGH
 
 #### Lösung
 ```sql
-Deine Lösung
+-- LEFT JOIN
+SELECT a.forename "Vorname", a.surname "Nachname", accv.vehicle_id "Fahrzeug-ID"
+FROM account a
+  LEFT JOIN acc_vehic accv ON (a.account_id = accv.account_id)
+WHERE accv.vehicle_id IS NULL;
+
+-- RIGHT JOIN
+SELECT a.forename "Vorname", a.surname "Nachname"
+FROM account a
+WHERE a.account_id NOT IN (
+SELECT accv.account_id
+FROM acc_vehic accv
+  RIGHT JOIN vehicle v ON (accv.vehicle_id = v.vehicle_id)
+WHERE accv.account_id IS NOT NULL
+);
 ```
+
+
