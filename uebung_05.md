@@ -52,6 +52,12 @@ FROM acc_vehic accv
   RIGHT JOIN vehicle v ON (accv.vehicle_id = v.vehicle_id)
 WHERE accv.account_id IS NOT NULL
 );
+
+-- Alternative
+SELECT a.surname "Vorname", a.forename "Nachname"
+FROM acc_vehic acc
+  RIGHT JOIN account a ON (acc.account_id = a.account_id)
+WHERE acc.vehicle_id IS NULL;
 ```
 
 
