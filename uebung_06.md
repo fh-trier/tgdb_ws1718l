@@ -35,7 +35,14 @@ Für welche Spalte**n** der Tabelle `ACC_VEHIC` wurde ein Foreign Key angelegt u
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT ucc.constraint_name, ucc.column_name, ucc.table_name
+FROM user_cons_columns ucc
+WHERE ucc.constraint_name IN (
+  SELECT uc.constraint_name
+  FROM user_constraints uc
+  WHERE uc.table_name LIKE 'ACC_VEHIC'
+  AND uc.constraint_type = 'R'
+);
 ```
 
 ### Aufgabe 3
@@ -43,7 +50,7 @@ Erstelle einen Check Constraint für die Tabelle `ACCOUNT`, dass der Wert der Sp
 
 #### Lösung
 ```sql
-Deine Lösung
+
 ```
 
 ### Aufgabe 4
