@@ -20,7 +20,14 @@ Wie heißt der Primary Key Contraint der Tabelle `VEHICLE` und für welche Spalt
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT ucc.constraint_name, ucc.column_name, ucc.position
+FROM user_cons_columns ucc
+WHERE ucc.constraint_name = (
+  SELECT uc.constraint_name
+  FROM user_constraints uc
+  WHERE uc.table_name LIKE 'VEHICLE'
+  AND uc.constraint_type LIKE 'P'
+);
 ```
 
 ### Aufgabe 2
