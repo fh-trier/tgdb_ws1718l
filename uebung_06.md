@@ -50,7 +50,20 @@ Erstelle einen Check Constraint für die Tabelle `ACCOUNT`, dass der Wert der Sp
 
 #### Lösung
 ```sql
+-- Check Constraint
+ALTER TABLE account
+ADD CONSTRAINT DATE_C
+CHECK(
+  U_DATE >= C_DATE
+);
 
+-- Test durch UPDATE
+UPDATE account a
+SET a.c_date = SYSDATE
+WHERE a.account_id = (
+    SELECT MIN(account_id)
+    FROM account
+);
 ```
 
 ### Aufgabe 4
@@ -58,7 +71,20 @@ Erstelle einen Check Constraint der überprüft, ob der erste Buchstabe der Spal
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Check Constraint
+ALTER TABLE gas
+ADD CONSTRAINT UPPER_NAME_C
+CHECK(
+  REGEXP_LIKE(gas_name, '^[A-Z].*$', c)
+);
+
+-- Test durch Update
+UPDATE gas g
+SET gas_name = 'benzin 95'
+WHERE gas_id = (
+  SELECT MIN(gas_id)
+  FROM gas
+);
 ```
 
 ### Aufgabe 5
