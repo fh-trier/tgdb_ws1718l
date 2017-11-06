@@ -98,7 +98,25 @@ Erstelle einen Check Contraint der überprüft, ob der Wert der Spalte `IDENTICA
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Check Constraint
+ALTER TABLE acc_vehic
+ADD CONSTRAINT IDENTICATOR
+CHECK(
+  REGEXP_LIKE(identicator, '^[A-Z]{1,3}:([A-Z]{1,2}:[0-9]{1,4}|[0-9]{1,6})$', 'c')
+);
+
+-- Test durch Update
+UPDATE acc_vehic
+SET identicator = 'ZF:54:74'
+WHERE vehicle_id = 1;
+
+UPDATE acc_vehic
+SET identicator = 'd:s:ß'
+WHERE vehicle_id = 1;
+
+UPDATE acc_vehic
+SET identicator = '10:MP:92'
+WHERE vehicle_id = 1;
 ```
 
 ### Aufgabe 6 - Wiederholung
