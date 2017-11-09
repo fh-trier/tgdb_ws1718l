@@ -102,7 +102,7 @@ Erstelle einen Check Contraint der überprüft, ob der Wert der Spalte `IDENTICA
 ALTER TABLE acc_vehic
 ADD CONSTRAINT IDENTICATOR
 CHECK(
-  REGEXP_LIKE(identicator, '^[A-Z]{1,3}:([A-Z]{1,2}:[0-9]{1,4}|[0-9]{1,6})$', 'c')
+  REGEXP_LIKE(identicator, '^[A-Z]{1,3}:([A-Z]{1,2}:[1-9][0-9]{,3}|[1-9][0-9]{,5})$', 'c')
 );
 
 -- Test durch Update
@@ -185,9 +185,3 @@ FOREIGN KEY (ACC_VEHIC_ID) REFERENCES ACC_VEHIC(ACC_VEHIC_ID);
 ALTER TABLE LBOOK
 ADD CHECK (B_DATE < S_DATE);
 ```
-
-
-
-
-
-
