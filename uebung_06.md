@@ -124,7 +124,17 @@ Liste für alle Personen den Verbrauch an Kraftstoff auf (Missachte hier die unt
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT  a.surname,
+        a.forename,
+        ( SELECT SUM(r.price_l * r.liter * 1+r.duty_amount)
+          FROM receipt r
+          WHERE r.account_id = a.account_id
+          GROUP BY r.account_id) AS "Ausgaben",
+        ( SELECT SUM(r.liter)
+          FROM receipt r
+          WHERE r.account_id = a.account_id
+          GROUP BY r.account_id) AS "Getankte Liter"
+FROM account a
 ```
 
 ### Aufgabe 7 - Wiederholung
@@ -132,7 +142,16 @@ Liste die Tankstellen absteigend sortiert nach der Kundenanzahl über alle Jahre
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT  TO_CHAR(r.c_date, 'YYYY') "Jahr",
+        p.provider_name "Anbieter",
+        gs.street, a.plz "Straße",
+        a.city "Stadt",
+        SUM(r.account_id) "Kundenanzahl"
+FROM gas_station gs
+  INNER JOIN provider p ON (gs.provider_id = p.provider_id)
+  INNER JOIN address a ON (gs.address_id = a.address_id)
+  INNER JOIN receipt r ON (gs.gas_station_id = r.gas_station_id)
+GROUP BY TO_CHAR(r.c_date, 'YYYY'), p.provider_name, gs.street, a.plz, a.city
 ```
 
 ### Aufgabe 8 - Wiederholung
@@ -142,7 +161,29 @@ Berücksichtige bitte jegliche Constraints!
 
 #### Lösung
 ```sql
-Deine Lösung
+CREATE TABLE LBOOK (
+  LBOOK_ID      NUMBER(38,0) NOT NULL,  -- PK
+  ACCOUNT_ID    NUMBER(38,0) NOT NULL,  -- FK - ACCOUNT_ID
+  ACC_VEHIC_ID  NUMBER(38,0) NOT NULL,  -- FK - ACC_VEHIC_ID
+  B_DATE        DATE NOT NULL,          -- Startdatum
+  KILOMETER     NUMBER(9,3) NOT NULL,   -- Gefahrene Kilometer
+  S_DATE        DATE NOT NULL           -- Stopdatum
+);
+
+ALTER TABLE LBOOK
+ADD CONSTRAINT PK_LBOOK
+PRIMARY KEY (LBOOK_ID);
+
+ALTER TABLE LBOOK
+ADD CONSTRAINT FK_LBOOK_ACCOUNT_ID
+FOREIGN KEY (ACCOUNT_ID) REFERENCES ACCOUNT(ACCOUNT_ID);
+
+ALTER TABLE LBOOK
+ADD CONSTRAINT FK_LBOOK_ACC_VEHIC_ID
+FOREIGN KEY (ACC_VEHIC_ID) REFERENCES ACC_VEHIC(ACC_VEHIC_ID);
+
+ALTER TABLE LBOOK
+ADD CHECK (B_DATE < S_DATE);
 ```
 
 
