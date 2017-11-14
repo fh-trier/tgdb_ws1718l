@@ -146,7 +146,7 @@ SELECT  TO_CHAR(r.c_date, 'YYYY') "Jahr",
         p.provider_name "Anbieter",
         gs.street, a.plz "Straße",
         a.city "Stadt",
-        SUM(r.account_id) "Kundenanzahl"
+        COUNT(r.account_id) "Kundenanzahl"
 FROM gas_station gs
   INNER JOIN provider p ON (gs.provider_id = p.provider_id)
   INNER JOIN address a ON (gs.address_id = a.address_id)
