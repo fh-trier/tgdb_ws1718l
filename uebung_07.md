@@ -39,8 +39,38 @@ END;
 ```
 
 #### Lösung
+Dieser anonyme PL/SQL-Codeblock gibt den Benutzer mit der größten ID aus, deren Nachname mit einem `P` beginnt.
+
 ```sql
-Deine Lösung
+DECLARE
+  v_account_id account.account_id%TYPE;
+  v_forename account.forename%TYPE;
+  v_surname account.surname%TYPE;
+  v_anzahl NUMBER(38);
+BEGIN
+  SELECT a.account_id ,
+         a.forename,
+         a.surname,
+         (SELECT COUNT(*)
+         FROM acc_vehic
+         WHERE account_id = a.account_id) INTO v_account_id, v_forename, v_surname, v_anzahl
+  FROM account a
+  WHERE a.account_id = (
+    SELECT MAX(account_id)
+    FROM account
+    WHERE surname LIKE 'P%'
+  );
+
+DBMS_OUTPUT.PUT_LINE('Der neuste Benutzer ist ' || v_forename || ' ' || v_surname || ' mit der ID ' || v_account_id || ' und hat ' || v_anzahl || ' Fahrzeuge.');
+
+EXCEPTION
+  WHEN NO_DATA_FOUND
+    THEN RAISE_APPLICATION_ERROR(-20001, 'Es wurde kein Benutzer gefunden');
+  WHEN OTHERS
+    THEN DBMS_OUTPUT.PUT_LINE ('Folgender unerwarteter Fehler ist aufgetreten: ');
+  RAISE;
+END;
+/
 ```
 
 ### Aufgabe 2
