@@ -112,9 +112,9 @@ BEGIN
 
   IF v_avg >= v_avg_all
   THEN
-    DBMS_OUTPUT.PUT_LINE('Die Tankstelle ' || v_provider_name || ', ' || v_street || ', ' || v_plz || ', ' || v_city || ', ' || v_country || ' wird gut besucht.');
+    DBMS_OUTPUT.PUT_LINE('Die Tankstelle ' || v_provider_name || ', ' || v_street || ', ' || v_plz || ', ' || v_city || ', ' || v_country || ' wird gut besucht, da der Durchschnitt von ' || v_avg || ' über dem gesamten Durchschnit von ' || v_avg_all || '  ist.');
   ELSE
-    DBMS_OUTPUT.PUT_LINE('Die Tankstelle ' || v_provider_name || ', ' || v_street || ', ' || v_plz || ', ' || v_city || ', ' || v_country || ' wird schlecht besucht    .');
+    DBMS_OUTPUT.PUT_LINE('Die Tankstelle ' || v_provider_name || ', ' || v_street || ', ' || v_plz || ', ' || v_city || ', ' || v_country || ' wird schlecht besucht, da der Durchschnitt von ' || v_avg || ' unter dem gesamten Durchschnit von ' || v_avg_all || ' ist.');
   END IF;
 
 
@@ -151,7 +151,27 @@ END;
 
 #### Lösung
 ```sql
-Deine Lösung
+DECLARE
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Liste alle Tankstellen aus Deutschland');
+  DBMS_OUTPUT.PUT_LINE('____________________________________________');
+  FOR rec_gs IN ( SELECT p.provider_name, gs.street, a.plz, a.city, c.country_name, gs.gas_station_id
+                  FROM gas_station gs
+                    INNER JOIN address a ON (a.address_id = gs.address_id)
+                    INNER JOIN provider p ON (gs.provider_id = p.provider_id)
+                    INNER JOIN country c ON (gs.country_id = c.country_id)
+                  WHERE c.country_name LIKE 'Deutschland') LOOP
+    DBMS_OUTPUT.PUT_LINE('++ ' || rec_gs.provider_name || ' ++ ' || rec_gs.street || ' ++ ' || rec_gs.plz || ' ++ ' || rec_gs.city || ' ++ ' || rec_gs.country_name);
+    FOR rec_a IN ( SELECT a.surname, a.forename
+                    FROM account a
+                      INNER JOIN receipt r ON (r.account_id = a.account_id)
+                    WHERE r.gas_station_id = rec_gs.gas_station_id) LOOP
+      DBMS_OUTPUT.PUT_LINE('++++ ' || rec_a.forename || ', ' || rec_a.surname);
+    END LOOP;
+  END LOOP;
+END;
+/
+
 ```
 
 ### Aufgabe 4
