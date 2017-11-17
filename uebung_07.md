@@ -171,7 +171,6 @@ BEGIN
   END LOOP;
 END;
 /
-
 ```
 
 ### Aufgabe 4
@@ -179,5 +178,23 @@ Schreibe einen anonymen PL/SQL-Codeblock, der alle deine Fahrzeuge auflistet und
 
 #### Lösung
 ```sql
-Deine Lösung
+DECLARE
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Liste alle Fahrzeuge mit Belegen');
+  DBMS_OUTPUT.PUT_LINE('____________________________________________');
+  FOR rec_r IN (SELECT p.producer_name, v.version, accv.alias, accv.acc_vehic_id
+                FROM acc_vehic accv
+                  INNER JOIN vehicle v ON (accv.vehicle_id = v.vehicle_id)
+                  INNER JOIN producer p ON (v.producer_id = p.producer_id)
+                WHERE accv.account_id = 1) LOOP
+    DBMS_OUTPUT.PUT_LINE('++ ' || rec_r.producer_name || ', ' || rec_r.version || ', ' || rec_r.alias || ' ++');
+    FOR rec_b IN (SELECT r.price_l, r.liter, r.price_l+r.liter AS summe, g.gas_name
+                  FROM receipt r
+                    INNER JOIN gas g ON (r.gas_id = g.gas_id)
+                  WHERE r.acc_vehic_id = rec_r.acc_vehic_id) LOOP
+      DBMS_OUTPUT.PUT_LINE('++++ ' || rec_b.price_l || ', ' || rec_b.liter || ', ' || rec_b.summe || ', ' || rec_b.gas_name || ' ++++');
+    END LOOP;
+  END LOOP;
+END;
+/
 ```
