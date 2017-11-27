@@ -48,27 +48,41 @@ Erstelle eine Prozedur, die das erstellen von Quittungen ermöglicht. Fange ents
 
 #### Lösung
 ```sql
+-- Prozedure: I_RECEIPT
+-- Mit dieser Prozedur können neue Quittungen (receipts) in die Tabelle RECEIPT gespeichert werden.
+-- Dazu sind mehrere Parameter notwendig.
+
 CREATE OR REPLACE PROCEDURE I_RECEIPT(
-    in_email IN VARCHAR2,
-    in_accv_id IN NUMBER,
-    in_duty_amount IN NUMBER,
-    in_gas_id IN NUMBER,
-    in_gas_station_id IN NUMBER,
-    in_price_l IN NUMBER,
-    in_kilometer IN NUMBER,
-    in_liter IN NUMBER,
-    in_receipt_date IN DATE)
+    in_email IN VARCHAR2,           -- Übergabeparameter EMail, kann NULL und nicht valide sein
+    in_accv_id IN NUMBER,           -- Übergabeparameter Acc_Vehic_ID, kann NULL und nicht valide sein
+    in_duty_amount IN NUMBER,       -- Übergabeparameter Duty_Amount, kann NULL und nicht valide sein
+    in_gas_id IN NUMBER,            -- Übergabeparameter Gas_ID, kann NULL und nicht valide sein
+    in_gas_station_id IN NUMBER,    -- Übergabeparameter Gas_Station_ID, kann NULL und nicht valide sein
+    in_price_l IN NUMBER,           -- Übergabeparameter Price_L, kann NULL und nicht valide sein
+    in_kilometer IN NUMBER,         -- Übergabeparameter Kilometer, kann NULL und nicht valide sein
+    in_liter IN NUMBER,             -- Übergabeparameter Liter, kann NULL und nicht valide sein
+    in_receipt_date IN DATE)        -- Übergabeparameter Receipt_Date, kann NULL und nicht valide sein
 AS
-    v_account_id account.account_id%TYPE;
-    v_accv_id acc_vehic.acc_vehic_id%TYPE;
-    v_gas_id gas.gas_id%TYPE;
-    v_gas_station_id gas_station.gas_station_id%TYPE;
-    v_duty_amount country.duty_amount%TYPE;
-    v_receipt_date receipt.receipt_date%TYPE;
+    -- Übergabeparameter die Valide sind und zwischengespeichert werden
+    v_account_id account.account_id%TYPE;             -- Account-ID, ist valide, lässt sich durch abfragen der E-Mail ermitteln.
+    v_accv_id acc_vehic.acc_vehic_id%TYPE;            -- Acc_Vehic_ID, ist valide
+    v_gas_id gas.gas_id%TYPE;                         -- Gas_ID ist valide
+    v_gas_station_id gas_station.gas_station_id%TYPE; -- Gas_Station_ID ist valide
+    v_duty_amount country.duty_amount%TYPE;           -- Duty_Amount ist valide
+    v_receipt_date receipt.receipt_date%TYPE;         -- Receipt_Date ist valide
 BEGIN
     -- Überprüfung Benutzer
+    -- Prüfen ob die übergebene E-Mail Adresse als Übergabeparameter gültig ist.
+    -- Prüfung erfolgt durch einen Regulären Ausdruck
     IF ( TRUE <> REGEXP_LIKE (in_email, '[a-zA-Z0-9._%-]+@[a-zA-Z0-9._%-]+\.[a-zA-Z]{2,7}')) THEN
         RAISE_APPLICATION_ERROR(-20001, 'Die E-Mail entspricht nicht den Konditionen.');
+
+    -- Übersteht die E-Mail Adresse den Regulären Ausdruck,
+    -- wird im System nach der dazugehörigen Account-ID gesucht.
+    -- Findet das System den Benutzer mit der E-Mail Adresse, wird die Account-ID zurückgegeben
+    -- und in der Variable v_account_id gespeichert. Siehe die deklarationen von Variablen in Block "AS".
+    -- Dieser Schritt ist Möglich, da die E-Mail Adresse nur einmal im System verwendet werden kann.
+    -- Dies haben wir sichergestellt durch den UNIQUE-Constraint.
     ELSE
         BEGIN
             SELECT account_id INTO v_account_id
@@ -81,6 +95,10 @@ BEGIN
     END IF;
 
     -- Überprüfung Fahrzeug
+    -- Hier wird ähnlich wie bei Account-ID überprüft,
+    -- ob es den Fahrzeughalter mit dem übergabeparameter Acc_Vehic_ID im System gibt.
+    -- Ist ein Datensatz mit gültigem Übergabeparameter vorhanden, wird dieser in der Variable
+    -- v_acc_id gespeichert.
     BEGIN
         SELECT acc_vehic_id INTO v_accv_id
         FROM acc_vehic
@@ -91,6 +109,7 @@ BEGIN
     END;
 
     -- Tankstellen ID
+    -- Gleiches Prinzip wie bei Account_ID und Acc_Vehic_ID
     BEGIN
         SELECT gas_station_id INTO v_gas_station_id
         FROM gas_station
@@ -101,28 +120,44 @@ BEGIN
     END;
 
     -- Price/l
-    IF (in_price_l IS NULL OR in_price_l = '') THEN
+    -- Prüfen ob der Preis pro Liter NULL ist
+    IF (in_price_l IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20001, 'Der Parameter in_price_l ist ungültig.');
+
+    -- Prüfen, ob der Preis pro Liter kleiner 0 ist.
+    ELSE IF (in_price_l < 0) THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Der Parameter in_price_l ist kleiner 0.');
     END IF;
 
     -- Liter
-    IF (in_liter IS NULL OR in_liter = '') THEN
+    -- Prüfen, ob die getankte Liter anzahl NULL ist
+    IF (in_liter IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20001, 'Der Parameter in_liter ist ungültig.');
+
+    -- Prüfen, ob die getankte Liter kleiner 0 ist.
+    ELSE IF (in_price_l < 0) THEN
+       RAISE_APPLICATION_ERROR(-20001, 'Es kann keine negative Anzahl an getanken Liter gespeichert werden.');
     END IF;
 
     -- Kilometer
-    IF (in_kilometer IS NULL OR in_kilometer = '') THEN
+    -- Prüfen, ob die Kilometeranzahl NULL ist
+    IF (in_kilometer IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20001, 'Der Parameter in_kilometer ist ungültig.');
+
+    -- Prüfen, ob die Kilometeranzahl kleiner 0 ist.
+    ELSE IF (in_kilometer < 0) THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Die Kilometeranzahl kann nicht kleiner 0 sein');
     END IF;
 
     -- Receipt date
-    IF (in_receipt_date IS NULL OR in_receipt_date = '') THEN
+    IF (in_receipt_date IS NULL) THEN
         v_receipt_date := SYSDATE;
     ELSE
         v_receipt_date := in_receipt_date;
     END IF;
 
     -- Gas
+    -- Ist der Übergabeparameter NULL, wird versucht die Gas_ID über die Tabelle Vehicle zu ermitteln.
     IF (in_gas_id IS NULL OR in_gas_id = '') THEN
         BEGIN
             SELECT v.default_gas_id INTO v_gas_id
@@ -138,6 +173,7 @@ BEGIN
     END IF;
 
     -- Duty
+    -- Ist der Übergabeparameter NULL, wird versucht den Steuersatz (Duty_Amount) über den Tabelle Country zu ermitteln.
     IF (in_duty_amount IS NULL OR in_duty_amount = '') THEN
         BEGIN
             SELECT c.duty_amount  INTO v_duty_amount
@@ -152,6 +188,7 @@ BEGIN
         v_duty_amount := in_duty_amount;
     END IF;
 
+    -- Speichern des Datensatzes mit validen Informationen
     BEGIN
         INSERT INTO RECEIPT
         VALUES(
@@ -185,11 +222,4 @@ Ausführen der Prozedur
 EXEC I_RECEIPT('peschm@fh-trier.de', 1, NULL, NULL, '1', '1,12', '478', '44,78', NULL);
 ```
 
-### Aufgabe 3
-Erstelle ein Prozedur, mit der man seine eigene Fahrzeuge in der Datenbank aktualisieren kann. Bspw. die Änderung von Fahrzeug informationen.
-
-#### Lösung
-```sql
-Deine Lösung
-```
 
