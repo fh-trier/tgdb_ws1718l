@@ -208,29 +208,3 @@ FROM vehicle v
   LEFT JOIN account a ON (accv.account_id = a.account_id)
 WHERE vt.vehicle_type_name LIKE 'LKW';
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

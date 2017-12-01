@@ -15,6 +15,7 @@ Wo liegen die Vor- und Nachteile eines Trigger in Vergleich zu einer Prozedur?
 
 #### Lösung
 **Vorteile**
+<<<<<<< HEAD
 + Ein Trigger löst automatisch vor oder nach einem Event/Vorfall aus. Er muss nicht explizit gestartet werden.
 + Kein Benutzer kann einen Trigger umgehen der aktiv ist.
 + Es müssen keine Berechtigungen für das Nutzen eines Trigger freigegeben werden
@@ -23,20 +24,26 @@ Wo liegen die Vor- und Nachteile eines Trigger in Vergleich zu einer Prozedur?
 + Kann keine Parameter übergeben bekommen
 + Kann keinen Rückgabewert liefern
 + Kann nur ausgeführt werden, wenn ein `INSERT`, `UPDATE` oder `DELETE` auf eine Tabelle ausgeführt wird. Eine Prozedur ist unabhängig.
+=======
++
++
++
+
+**Nachteile**
++
++
++
+>>>>>>> add: solution exercise 9, task 2
 
 ### Aufgabe 2
 Wo drin unterscheidet sich der `Row Level Trigger` von einem `Statement Trigger`?
 
 #### Lösung
-<<<<<<< HEAD
 **Row Level Trigger**
 Der Row Level Trigger wird immer dann ausgelöst, wenn eine Zeile durch den SQL-Befehl `INSERT`, `UPDATE` oder `DELETE` beinflusst wird. Wenn die Anweisung keine Zeilen trifft, wird keine Triggeraktion ausgefürt.
 
 **Statement Trigger**
 Diese Art von Trigger wird ausgelöst, wenn eine SQL-Anweisung die Zeilen der Tabellen betrifft. Wenn der Trigger aktiviert ist, führt er seine Aktivitäten unabhängig von der Anzahl der durch die SQL-Anweisung betroffenen Zeilen aus.
-=======
-Deine Lösung
->>>>>>> add: exercise 9, new task 2 - renummbering tasks
 
 ### Aufgabe 3
 Schaue dir den folgenden PL/SQL-Code an. Was macht er?
@@ -71,10 +78,10 @@ Es wird eine Sequenz erzeugt auf die in dem Trigger `IB_ACCOUNT` zurückgegriffe
 
 ### Aufgabe 4
 Verbessere den Trigger aus Aufgabe 2 so, dass
-+ wenn versucht wird einen Datensätz mit `NULL` Werten zu füllen, die alten Wert für alle Spalten die als `NOT NULL` gekennzeichnet sind behalten bleiben.
-+ es nicht möglich ist, das `C_DATE` und `U_DATE` in der Zukunkt liegen
++ wenn versucht wird einen Datensatz mit `NULL` Werten zu füllen, die alten Wert für alle Spalten, die als `NOT NULL` gekennzeichnet sind, behalten bleiben.
++ es nicht möglich ist, das die Werte für `C_DATE` und `U_DATE` in der Zukunkt liegen
 + `U_DATE` >= `C_DATE` sein muss
-+ der erste Buchstabe des Vor- und Nachnamens klein geschrieben ist
++ der erste Buchstabe jedes Wortes im Vor- und Nachnamen groß geschrieben wird
 + die Account-ID aus einer `SEQUENCE` entnommen wird
 
 Nutze die Lösung der Aufgabe 2, Aufgabenblatt 8 um die Aufgabe zu lösen. Dort solltest du einige Hilfestellungen finden.
