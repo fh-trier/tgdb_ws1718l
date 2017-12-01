@@ -152,7 +152,19 @@ Angenommen der Steuersatz in Deutschland sinkt von 19% auf 17%.
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Tabelle Country
+UPDATE country
+SET duty_amount = 0.19
+WHERE country_name LIKE 'Deutschland';
+
+-- Tabelle Receipt
+UPDATE receipt r
+SET r.duty_amount = (
+  SELECT duty_amount
+  FROM country
+    INNER JOIN gas_station gs ON (gs.country_id = c.country_id)
+  WHERE gs.gas_station_id = r.gas_station_id
+);
 ```
 
 ### Aufgabe 6
