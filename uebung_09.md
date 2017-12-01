@@ -75,7 +75,74 @@ Nutze die Lösung der Aufgabe 2, Aufgabenblatt 8 um die Aufgabe zu lösen. Dort 
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Erzeugen einer Sequenz für die Spalte Account_ID der Tabelle Account
+CREATE SEQUENCE seq_account_id
+START WITH 1000                        -- Startwert der Sequenz
+INCREMENT BY 1                         -- Intervall des Inkrements
+MAXVALUE 99999999                      -- Maximaler Wert, die die Sequenz annehmen kann
+CYCLE                                  -- Wird der Maximale Wert erreicht, fängt die Sequent bei START WITH wieder an
+CACHE 20;                              -- Hält n Sequenzen im Cache
+
+-- Erstellen des Triggers
+CREATE OR REPLACE TRIGGER BIU_ACCOUNT
+BEFORE INSERT OR UPDATE OF account_id ON account
+FOR EACH ROW
+DECLARE
+
+BEGIN
+
+  -- Überschreiben der Account-ID beim Einfügen durch ein Inkrement aus der Sequent seq_account_id
+  IF INSERTING THEN
+    :NEW.account_id := seq_account_id.NEXTVAL;
+  END IF;
+
+  -- Überschriben der Account-ID beim Aktualisieren durch die alte Account-ID
+  -- Es ist dadurch nicht möglich die Account-ID zu ändern
+  IF UPDATING('account_id') THEN
+    :NEW.account_id := :OLD.account_id;
+  END IF;
+
+  -- Wenn SURNAME NULL ist, soll der alte Wert für Surname übernommen werden
+  IF (:NEW.surname IS NULL) THEN
+    :NEW.surname := :OLD.surname;
+
+  -- Ist SURNAME nicht NULL, soll der erste Buchstabe jedes Wortes im Nachnamen groß geschrieben werden
+  ELSE
+    :NEW.surname := INITCAP(:NEW.surname)
+  END IF;
+
+  -- Wenn FORENAME NULL ist, soll der alte Wert für FORENAME übernommen werden
+  IF (:NEW.forename IS NULL) THEN
+    :NEW.forename := :OLD.forename;
+
+  -- Ist FORENAME nicht NULL, soll der erste Buchstabe jedes Wortes im Vornamen groß geschrieben werden
+  ELSE
+    :NEW.forename := INITCAP(:NEW.forename)
+  END IF;
+
+  -- Wenn EMAIL NULL ist, soll der alte Wert für EMAIL übernommen werden
+  IF (:NEW.email IS NULL) THEN
+    :NEW.email := :OLD.email;
+  END IF;
+
+  -- Wenn C_DATE NULL ist, wird SYSDATE verwendet
+  IF (:NEW.C_DATE is NULL) THEN
+    :NEW.C_DATE := SYSDATE;
+  END IF;
+
+  -- Wenn U_DATE NULL ist, wird SYSDATE verwendet
+  IF (:NEW.U_DATE IS NULL) THEN
+    :NEW.U_DATE := SYSDATE)
+  ELSE IF;
+
+  -- Wenn das Erstellungsdatum jünger ist als das Aktualisierungsdatum soll abgebrochen werden
+  IF (:NEW.C_DATE > :NEW.U_DATE) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Das U_DATE muss größer (jünger) als das C_DATE sein!');
+  END IF;
+
+END;
+/
+
 ```
 
 ### Aufgabe 5
