@@ -16,7 +16,15 @@
 Wo liegen die Vor- und Nachteile eines Trigger in Vergleich zu einer Prozedur?
 
 #### Lösung
-Deine Lösung
+**Vorteile**
++
++
++
+
+**Nachteile**
++
++
++
 
 ### Aufgabe 2
 Wo drin unterscheidet sich der `Row Level Trigger` von einem `Statement Trigger`?
@@ -53,7 +61,7 @@ END;
 ```
 
 #### Lösung
-Deine Lösung
+Es wird eine Sequenz erzeugt auf die in dem Trigger `IB_ACCOUNT` zurückgegriffen wird. Das Kürzel `BIU` steht für `BEFORE`, `INSERT` und `UPDATE`. Es soll Kennzeichnen, dass der Trigger vor einem Einfügen oder Aktualisieren ausgefürt wird. Der Trigger bewirkt, dass bei einem Aktualisieren auf die Spalte `ACCOUNT_ID` der Tabelle `ACCOUNT` eine Fehlermeldung ausgegeben wird. Wird ein Datensatz neu eingefügt, wird der übergebene Wert für die Spalte `ACCOUNT_ID` durch ein Inkrement aus der Sequenz überschrieben. Dies stellt sicher, dass die Spalte `ACCOUNT_ID` ausschließlich aus einer fortlaufenden Nummer erzeugt wird.
 
 ### Aufgabe 4
 Verbessere den Trigger aus Aufgabe 2 so, dass
