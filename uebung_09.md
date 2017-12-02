@@ -177,7 +177,8 @@ WHERE r.gas_station_id IN (
     FROM gas_station gs
         INNER JOIN country c ON (gs.country_id = c.country_id)
     WHERE c.country_name LIKE 'Deutschland'
-);
+)
+AND C_DATE >= TO_DATE('01.10.2017', 'DD.MM.YYYY');
 ```
 
 ### Aufgabe 6
