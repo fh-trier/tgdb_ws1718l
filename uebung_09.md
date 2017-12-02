@@ -79,7 +79,7 @@ Nutze die Lösung der Aufgabe 2, Aufgabenblatt 8 um die Aufgabe zu lösen. Dort 
 
 #### Lösung
 ```sql
--- Erzeugen einer Sequenz für die Spalte Account_ID der Tabelle Account
+-- Erstellen einer Sequenz
 CREATE SEQUENCE seq_account_id
 START WITH 1000                        -- Startwert der Sequenz
 INCREMENT BY 1                         -- Intervall des Inkrements
@@ -112,7 +112,7 @@ BEGIN
 
   -- Ist SURNAME nicht NULL, soll der erste Buchstabe jedes Wortes im Nachnamen groß geschrieben werden
   ELSE
-    :NEW.surname := INITCAP(:NEW.surname)
+    :NEW.surname := INITCAP(:NEW.surname);
   END IF;
 
   -- Wenn FORENAME NULL ist, soll der alte Wert für FORENAME übernommen werden
@@ -121,7 +121,7 @@ BEGIN
 
   -- Ist FORENAME nicht NULL, soll der erste Buchstabe jedes Wortes im Vornamen groß geschrieben werden
   ELSE
-    :NEW.forename := INITCAP(:NEW.forename)
+    :NEW.forename := INITCAP(:NEW.forename);
   END IF;
 
   -- Wenn EMAIL NULL ist, soll der alte Wert für EMAIL übernommen werden
@@ -136,8 +136,8 @@ BEGIN
 
   -- Wenn U_DATE NULL ist, wird SYSDATE verwendet
   IF (:NEW.U_DATE IS NULL) THEN
-    :NEW.U_DATE := SYSDATE)
-  ELSE IF;
+    :NEW.U_DATE := SYSDATE;
+  END IF;
 
   -- Wenn das Erstellungsdatum jünger ist als das Aktualisierungsdatum soll abgebrochen werden
   IF (:NEW.C_DATE > :NEW.U_DATE) THEN
@@ -147,6 +147,9 @@ BEGIN
 END;
 /
 
+-- Testen des Triggers
+INSERT INTO ACCOUNT (SURNAME, FORENAME, EMAIL)              -- Spalten die nicht angegeben werden, jedoch Pflichtfelder sind,
+VALUES ('brückner', 'thorsten', 'bruecknert@fh-trier.de');  -- werden durch den Trigger mit Werten ersetzt. Dazu zählt die ID, das C_DATE und U_DATE.
 ```
 
 ### Aufgabe 5
