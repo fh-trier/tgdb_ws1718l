@@ -17,20 +17,24 @@ Wo liegen die Vor- und Nachteile eines Trigger in Vergleich zu einer Prozedur?
 
 #### Lösung
 **Vorteile**
-+
-+
-+
++ Ein Trigger löst automatisch vor oder nach einem Event/Vorfall aus. Er muss nicht explizit gestartet werden.
++ Kein Benutzer kann einen Trigger umgehen der aktiv ist.
++ Es müssen keine Berechtigungen für das Nutzen eines Trigger freigegeben werden
 
 **Nachteile**
-+
-+
-+
++ Kann keine Parameter übergeben bekommen
++ Kann keinen Rückgabewert liefern
++ Kann nur ausgeführt werden, wenn ein `INSERT`, `UPDATE` oder `DELETE` auf eine Tabelle ausgeführt wird. Eine Prozedur ist unabhängig.
 
 ### Aufgabe 2
 Wo drin unterscheidet sich der `Row Level Trigger` von einem `Statement Trigger`?
 
 #### Lösung
-Deine Lösung
+**Row Level Trigger**
+Der Row Level Trigger wird immer dann ausgelöst, wenn eine Zeile durch den SQL-Befehl `INSERT`, `UPDATE` oder `DELETE` beinflusst wird. Wenn die Anweisung keine Zeilen trifft, wird keine Triggeraktion ausgefürt.
+
+**Statement Trigger**
+Diese Art von Trigger wird ausgelöst, wenn eine SQL-Anweisung die Zeilen der Tabellen betrifft. Wenn der Trigger aktiviert ist, führt er seine Aktivitäten unabhängig von der Anzahl der durch die SQL-Anweisung betroffenen Zeilen aus.
 
 ### Aufgabe 3
 Schaue dir den folgenden PL/SQL-Code an. Was macht er?
