@@ -185,7 +185,15 @@ Liste alle Hersteller auf, die LKW's produzieren und verknüpfe diese ggfl. mit 
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT vt.vehicle_type_name "Typ",
+       p.producer_name "Hersteller",
+       (CASE WHEN a.forename IS NULL AND a.surname IS NULL THEN NULL ELSE CONCAT(a.forename, CONCAT(' ', a.surname)) END)  "Besitzer"
+FROM vehicle v
+  INNER JOIN vehicle_type vt ON (v.vehicle_type_id = vt.vehicle_type_id)
+  INNER JOIN producer p ON (v.producer_id = p.producer_id)
+  LEFT JOIN acc_vehic accv ON(v.vehicle_id = accv.vehicle_id)
+  LEFT JOIN account a ON (accv.account_id = a.account_id)
+WHERE vt.vehicle_type_name LIKE 'LKW';
 ```
 
 
