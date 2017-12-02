@@ -161,16 +161,22 @@ Angenommen der Steuersatz in Deutschland sinkt von 19% auf 17%.
 ```sql
 -- Tabelle Country
 UPDATE country
-SET duty_amount = 0.19
+SET duty_amount = 0.17
 WHERE country_name LIKE 'Deutschland';
 
 -- Tabelle Receipt
 UPDATE receipt r
 SET r.duty_amount = (
-  SELECT duty_amount
-  FROM country
+  SELECT c.duty_amount
+  FROM country c
     INNER JOIN gas_station gs ON (gs.country_id = c.country_id)
   WHERE gs.gas_station_id = r.gas_station_id
+)
+WHERE r.gas_station_id IN (
+    SELECT gs.gas_station_id
+    FROM gas_station gs
+        INNER JOIN country c ON (gs.country_id = c.country_id)
+    WHERE c.country_name LIKE 'Deutschland'
 );
 ```
 
