@@ -22,3 +22,6 @@ target
 
 # pdf documents
 **/uebung_*.pdf
+
+# merged-files
+**/*.orig
