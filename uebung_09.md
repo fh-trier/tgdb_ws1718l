@@ -106,8 +106,12 @@ BEGIN
     :NEW.account_id := :OLD.account_id;
   END IF;
 
-  -- Wenn SURNAME NULL ist, soll der alte Wert für Surname übernommen werden
-  IF (:NEW.surname IS NULL) THEN
+  -- Wenn SURNAME NULL ist, soll eine Fehlermeldung erscheinen bei einem INSERT-Befehl
+  IF (INSERTING AND :NEW.surname IS NULL) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Der Nachname darf nicht NULL sein!');
+
+  -- Wenn SURNAME NULL ist, soll bei einem UPDATE der alte Wert behalten bleiben
+  ELSIF (UPDATING AND :NEW.surname IS NULL) THEN
     :NEW.surname := :OLD.surname;
 
   -- Ist SURNAME nicht NULL, soll der erste Buchstabe jedes Wortes im Nachnamen groß geschrieben werden
@@ -115,8 +119,12 @@ BEGIN
     :NEW.surname := INITCAP(:NEW.surname);
   END IF;
 
-  -- Wenn FORENAME NULL ist, soll der alte Wert für FORENAME übernommen werden
-  IF (:NEW.forename IS NULL) THEN
+  -- Wenn FORENAME NULL ist, soll eine Fehlermeldung erscheiben bei einem INSERT-Befehl
+  IF (INSERTING AND :NEW.forename IS NULL) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Der Vorname darf nicht NULL sein!');
+
+  -- Wenn FORENAME NULL ist, soll bei einem UPDATE der alte Wert behalten bleiben
+  ELSIF (UPDATEING AND :NEW.forename IS NULL) THEN
     :NEW.forename := :OLD.forename;
 
   -- Ist FORENAME nicht NULL, soll der erste Buchstabe jedes Wortes im Vornamen groß geschrieben werden
@@ -124,8 +132,12 @@ BEGIN
     :NEW.forename := INITCAP(:NEW.forename);
   END IF;
 
-  -- Wenn EMAIL NULL ist, soll der alte Wert für EMAIL übernommen werden
-  IF (:NEW.email IS NULL) THEN
+  -- Wenn EMAIL NULL ist, soll eine Fehlermeldung erscheinen bei einem INSERT-Befehl
+  IF (INSERTING AND :NEW.email IS NULL) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Die E-MAIL darf nicht NULL sein!);
+
+  -- Wenn EMAIL NULL ist, soll bei einem Update der alte Wert behalten bleiben
+  ELSIF
     :NEW.email := :OLD.email;
   END IF;
 
