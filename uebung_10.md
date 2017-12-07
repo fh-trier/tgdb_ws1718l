@@ -39,7 +39,32 @@ Geben Sie mit einem SQL Befehl alle Klausuren aus, zu denen sich Personen angeme
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Mit Exists
+SELECT KlausurNr
+FROM Anmeldung a
+WHERE	NOT EXISTS (
+  SELECT *
+  FROM Anmeldung
+  WHERE a.KlausurNr = KlausurNr
+  AND Note IS NOT NULL
+);
+
+-- Mit Subquerys
+SELECT a1.KlausurNr
+FROM Anmeldung a1
+WHERE ( ( SELECT COUNT (*) AS "A_G"
+          FROM Anmeldung a2
+          WHERE a2.KlausurNr = a1.KlausurNr
+        ) -
+        ( SELECT COUNT (*) AS "A_B"
+          FROM Anmeldung a3
+          WHERE a3.KlausurNr = a1.KlausurNr
+          AND a3.Note IS NOT NULL
+        )
+      ) = ( SELECT COUNT (*) AS "A_G"
+            FROM Anmeldung a4
+            WHERE a4.KlausurNr = a1.KlausurNr)
+ORDER BY a1.KlausurNr ASC;
 ```
 
 ### Aufgabe 3
@@ -47,5 +72,11 @@ Finde mit der Option `EXISTS` herraus, wie viele Hersteller in der Datenbank hin
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT COUNT(producer_id) AS Anzahl
+FROM producer p
+WHERE NOT EXISTS (
+    SELECT producer_id
+    FROM vehicle v
+    WHERE v.producer_id = p.producer_id
+);
 ```
