@@ -31,7 +31,7 @@ WHERE v.Anzahl = (
 ```
 
 #### Lösung
-Deine Lösung
+Es wird ein SQL-Statement durch eine `WITH` Klausel zwischengespeichert unter dem Namen `vehicles`. In der unteren Abfrage wird in dem `FROM` Bezug auf das zwischengespeicherte Ergebiss genommen.
 
 ### Aufgabe 2
 Die folgende Aufgabe bezieht sich auf das Datenbankmodell der Vorlesung.
