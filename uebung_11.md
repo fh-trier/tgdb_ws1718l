@@ -58,4 +58,6 @@ Hilfestellung:
 | t30       | T6          | FETCH(A)  |
 | t31       | T7          | COMMIT    |
 
+#### Lösung
 
+![Aufgabe_1](./img/uebung_11_aufgabe_1.png)
