@@ -21,8 +21,8 @@ Sie haben ein `SELECT`-Recht auf die Tabelle `ARTIKEL` im Schema `peschm` - Waru
 ```sql
 SELECT table_name, privilege, grantee
 FROM all_tab_privs
-WHERE REGEXP_LIKE(table_name, 'ARTIKEL', 'i')
-AND REGEXP_LIKE(table_schema, 'DWH', 'i')
+WHERE REGEXP_LIKE(table_name, 'artikel', 'i')
+AND REGEXP_LIKE(table_schema, 'peschm', 'i')
 AND grantee IN (
   USER,
   (SELECT granted_role
