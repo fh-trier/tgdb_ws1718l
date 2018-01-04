@@ -175,7 +175,7 @@ Beantworten Sie die folgenden Aufgaben mit einem SQL-Befehl:
 #### Aufgabe 8a
 Geben Sie alle Kunden aus mit der Anzahl ihrer Bestellungen!
 
-#### Lösung
+##### Lösung
 ```sql
 SELECT k.kundennr, COUNT(b.bestellnr)
 FROM kunde k
@@ -186,7 +186,7 @@ GROUP BY k.kundennr;
 #### Aufgabe 8b
 Tragen Sie in der Bestellung mit Nr `19366` ein Lieferdatum ein, das neun Tage in der Zukunft liegt von heute aus gesehen!
 
-#### Lösung
+##### Lösung
 ```sql
 -- Änderung
 UPDATE bestellung
@@ -202,7 +202,7 @@ WHERE bestellnr = 19366;
 #### Aufgabe 8c
 Welcher Kunde hat am meisten Bestellungen aufgegeben?
 
-#### Lösung
+##### Lösung
 ```sql
 SELECT k.kundennr, COUNT(b.bestellnr)
 FROM kunde k
@@ -222,7 +222,7 @@ HAVING COUNT(b.bestellnr) = (
 #### Aufgabe 8d
 Geben Sie Kunden aus, die keine Bestellung aufgegeben haben!
 
-#### Lösung
+##### Lösung
 ```sql
 SELECT k.name
 FROM kunde k
@@ -235,7 +235,7 @@ WHERE k.kundennr NOT IN (
 #### Aufgabe 8e
 Welcher Kunde hat den größten Bestellwert generiert?
 
-#### Lösung
+##### Lösung
 ```sql
 SELECT k.kundennr, k.name
 FROM kunde k
