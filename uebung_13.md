@@ -26,7 +26,9 @@ Gebe mit einem regulären Ausdruck alle Artikel aus, die mit einem Großbuchstab
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT a.Bezeichnung
+FROM artikel a
+WHERE REGEXP_LIKE(a.Bezeichnung, '^[A-Z].{3,}$', 'c');
 ```
 
 ### Aufgabe 2
@@ -34,7 +36,9 @@ Gebe mit einem regulären Ausdruck alle Artikelnummern aus, die aus 3 Ziffern be
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT a.artikelnr
+FROM artikel a
+WHERE REGEXP_LIKE(a.artikelnr, '^1[0-35-9]{2}$');
 ```
 
 ### Aufgabe 3
@@ -42,7 +46,11 @@ Gebe alle Kunden mit der Anzahl ihrer Bestellungen aus. Hier sollen auch Kunden 
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.name, COUNT(b.bestellnr) AS "anzahl"
+FROM person p
+LEFT JOIN bestellung b ON (b.pnr = p.pnr)
+GROUP BY p.name
+HAVING REGEXP_LIKE(COUNT(b.bestellnr), '^0');
 ```
 
 ### Aufgabe 4
@@ -50,7 +58,13 @@ Ergänzen Sie das Skript um das `CREATE TABLE` statement für die Tabelle `BESTE
 
 #### Lösung
 ```sql
-Deine Lösung
+CREATE TABLE "BESTELLPOSITION" (
+  "BESTELLNR"     NUMBER(38) NOT NULL PRIMARY KEY,
+  "ARTIKELNR"     NUMBER(38) NOT NULL,
+  "LIEFERUNGSNR"  NUMBER(38),
+  "MENGE"         NUMBER(38) NOT NULL,
+  CONSTRAINT "PK_BESTELLNR"·PRIMARY KEY (BESTELLNR, ARTIKELNR);
+);
 ```
 
 ### Aufgabe 5
@@ -58,7 +72,11 @@ Stellen Sie sicher, dass eine Bestellnr immer größer null ist.
 
 #### Lösung
 ```sql
-Deine Lösung
+ALTER TABLE bestellposition
+ADD CONSTRAINT "C_BESTELLNR"
+CHECK (
+  bestellnr > 0
+);
 ```
 
 ### Aufgabe 6
@@ -66,7 +84,27 @@ Ergänzen Sie das Skript um eine Definition eines geeigneten `PRIMARY KEY` für 
 
 #### Lösung
 ```sql
-Deine Lösung
+-- FOREIGN KEY
+ALTER TABLE bestellposition
+ADD CONSTRAINT "FK_BESTELLPOSITION_LIEFERUNG"
+  FOREIGN KEY (lieferungsnr)
+  REFERENCES lieferung(lieferungsnr);
+
+ALTER TABLE bestellposition
+ADD CONSTRAINT "FK_BESTELLPOSITION_BESTELLUNG"
+  FOREIGN KEY (bestellnr)
+  REFERENCES bestellung(bestellnr);
+
+ALTER TABLE bestellposition
+ADD CONSTRAINT "FK_BESTELLPOSITION_ARTIKEL"
+  FOREIGN KEY (artikelnr)
+  REFERENCES artikel(artikelnr);
+
+-- PRIMARY KEY
+-- Der Primary Key wurde bereits durch das CREATE TABLE Statement erzeugt. Kann aber auch manuell erzeugt werden.
+ALTER TABLE bestellposition
+ADD CONSTRAINT "PK_BESTELLNR"
+  PRIMARY KEY (bestellnr, artikelnr);
 ```
 
 ### Aufgabe 7
@@ -74,7 +112,11 @@ Starten Sie das so veränderte Skript.
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Beispiel Linux und Mac
+start '~/workspace/tgdb_ws1718/sql/schema.sql'
+
+-- Beispiel Windows
+start 'C:\Users\hugo\workspace\tgdb_ws1718\sql\schema.sql'
 ```
 
 ### Aufgabe 8
@@ -82,7 +124,27 @@ Stellen Sie sicher, dass jede Person, die neu in den Bestand aufgenommen wird ei
 
 #### Lösung
 ```sql
-Deine Lösung
+-- Sequenz
+CREATE SEQUENCE "PERSON_SEQ"
+START WITH 1000
+INCREMENT BY 1;
+
+-- Trigger
+CREATE OR REPLACE TRIGGER PersonNr_Sequence_Trigger
+BEFORE INSERT OR UPDATE OF pnr ON Person
+FOR EACH ROW
+DECLARE
+
+BEGIN
+  IF UPDATING('pnr') THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Personennummer darf nicht verändert werden!');
+  END IF;
+
+  IF INSERTING THEN
+    :NEW.pnr := person_seq.NEXTVAL;
+  END IF;
+END;
+/
 ```
 
 ### Aufgabe 9
@@ -92,7 +154,17 @@ Dieser Kunde bestellt den Artikel **SAP for beginners** mit der Artikelnummer `1
 
 #### Lösung
 ```sql
-Deine Lösung
+INSERT INTO Bestellung
+VALUES (100, (SELECT pnr
+              FROM person
+              WHERE name LIKE 'Hugo McKinnock'),
+        SYSDATE);
+
+INSERT INTO Bestellposition
+VALUES (100, 123, NULL, 2);
+
+INSERT INTO Bestellposition
+VALUES (100, 234, NULL, 1);
 ```
 
 ### Aufgabe 10
@@ -100,7 +172,9 @@ Räumen Sie dem DB-Benutzer `SCOTT` das Recht ein, `UPDATE` (nicht auf `ARTIKELN
 
 #### Lösung
 ```sql
-Deine Lösung
+GRANT UPDATE(bezeichnung, preis), SELECT
+ON artikel
+TO scott;
 ```
 
 ### Aufgabe 11
@@ -110,7 +184,13 @@ Vorsicht: Der Kunde könnte mehrere Bestellungen aufgegeben haben oder auch gar 
 
 #### Lösung
 ```sql
-Deine Lösung
+DELETE FROM person
+WHERE pnr IN (
+  SELECT pnr
+  FROM bestellung
+  GROUP BY pnr
+  HAVING MAX(datum) < SYSDATE - INTERVAL '1' YEAR
+);
 ```
 
 ### Aufgabe 12
@@ -118,7 +198,9 @@ Geben Sie die Personen aus absteigend sortiert nach Namen und innerhalb des glei
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.Name, p.Geburtsdatum
+FROM person p
+ORDER BY p.Name DESC, p.Geburtsdatum ASC;
 ```
 
 ### Aufgabe 13
@@ -126,7 +208,8 @@ Erhöhen Sie den Preis jeden Artikels um 5%.
 
 #### Lösung
 ```sql
-Deine Lösung
+UPDATE artikel
+SET preis = preis * 1.05;
 ```
 
 ### Aufgabe 14
@@ -134,7 +217,10 @@ Für welche der Bestellungen ist noch keine Lieferung erfolgt?
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT DISTINCT(b.Bestellnr)
+FROM Bestellung b
+  INNER JOIN bestellposition bp ON (bp.bestellnr = b.bestellnr)
+WHERE bp.lieferungsnr IS NULL;
 ```
 
 ### Aufgabe 15
@@ -142,7 +228,9 @@ Geben Sie die Personen aus, die mindestens 18 Jahre alt sind.
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.Name
+FROM person p
+WHERE p.GEBURTSDATUM < (sysdate - INTERVAL '18' YEAR);
 ```
 
 ### Aufgabe 16
@@ -150,5 +238,9 @@ Geben Sie alle Personen aus, deren Namen zwischen fünf und zehn Zeichen lang si
 
 #### Lösung
 ```sql
-Deine Lösung
+SELECT p.Name
+FROM Person p
+WHERE LENGTH(p.Name) > 4
+AND LENGTH(p.Name) < 11
+AND p.Name LIKE '%-%';
 ```
