@@ -26,9 +26,9 @@ Gebe mit einem regulären Ausdruck alle Artikel aus, die mit einem Großbuchstab
 
 #### Lösung
 ```sql
-SELECT a.Bezeichnung
+SELECT a.bezeichnung
 FROM artikel a
-WHERE REGEXP_LIKE(a.Bezeichnung, '^[A-Z].{3,}$', 'c');
+WHERE REGEXP_LIKE(a.bezeichnung, '^[A-Z].{3,}$', 'c');
 ```
 
 ### Aufgabe 2
@@ -48,7 +48,7 @@ Gebe alle Kunden mit der Anzahl ihrer Bestellungen aus. Hier sollen auch Kunden 
 ```sql
 SELECT p.name, COUNT(b.bestellnr) AS "anzahl"
 FROM person p
-LEFT JOIN bestellung b ON (b.pnr = p.pnr)
+  LEFT JOIN bestellung b ON (b.pnr = p.pnr)
 GROUP BY p.name
 HAVING REGEXP_LIKE(COUNT(b.bestellnr), '^0');
 ```
@@ -59,11 +59,11 @@ Ergänzen Sie das Skript um das `CREATE TABLE` statement für die Tabelle `BESTE
 #### Lösung
 ```sql
 CREATE TABLE "BESTELLPOSITION" (
-  "BESTELLNR"     NUMBER(38) NOT NULL PRIMARY KEY,
+  "BESTELLNR"     NUMBER(38) NOT NULL,
   "ARTIKELNR"     NUMBER(38) NOT NULL,
   "LIEFERUNGSNR"  NUMBER(38),
   "MENGE"         NUMBER(38) NOT NULL,
-  CONSTRAINT "PK_BESTELLNR"·PRIMARY KEY (BESTELLNR, ARTIKELNR);
+  CONSTRAINT "PK_BESTELLNR" PRIMARY KEY (BESTELLNR, ARTIKELNR)
 );
 ```
 
@@ -154,17 +154,42 @@ Dieser Kunde bestellt den Artikel **SAP for beginners** mit der Artikelnummer `1
 
 #### Lösung
 ```sql
-INSERT INTO Bestellung
+INSERT INTO bestellung
 VALUES (100, (SELECT pnr
               FROM person
               WHERE name LIKE 'Hugo McKinnock'),
         SYSDATE);
 
-INSERT INTO Bestellposition
+INSERT INTO bestellposition
 VALUES (100, 123, NULL, 2);
 
-INSERT INTO Bestellposition
+INSERT INTO bestellposition
 VALUES (100, 234, NULL, 1);
+
+-- Subqueries
+INSERT INTO bestellposition
+VALUES (100,
+        (
+          SELECT a.artikelnr
+          FROM artikel a
+          WHERE REGEXP_LIKE(a.bezeichnung, '^sap for beginners$', 'i')
+        ),
+        NULL,
+        2
+);
+
+INSERT INTO Bestellposition
+VALUES (100,
+        (
+          SELECT a.artikelnr
+          FROM artikel a
+          WHERE REGEXP_LIKE(a.bezeichnung, '^sap for beginners$', 'i')
+        ),
+        NULL,
+        1
+);
+
+
 ```
 
 ### Aufgabe 10
@@ -191,6 +216,17 @@ WHERE pnr IN (
   GROUP BY pnr
   HAVING MAX(datum) < SYSDATE - INTERVAL '1' YEAR
 );
+
+-- Die Abfrage verletzt gegen den Foreign Key Constraint "FK_BESTELLUNG_PERSON".
+-- Die Beziehung sollte modifiziert werden um einen ON DELETE CASCADE
+ALTER TABLE bestellung
+DROP CONSTRAINT "FK_BESTELLUNG_PERSON";
+
+ALTER TABLE bestellung
+ADD CONSTRAINT "FK_BESTELLUNG_PERSON"
+FOREIGN KEY (PNR)
+REFERENCES PERSON (PNR)
+ON DELETE CASCADE;
 ```
 
 ### Aufgabe 12
@@ -217,9 +253,8 @@ Für welche der Bestellungen ist noch keine Lieferung erfolgt?
 
 #### Lösung
 ```sql
-SELECT DISTINCT(b.Bestellnr)
-FROM Bestellung b
-  INNER JOIN bestellposition bp ON (bp.bestellnr = b.bestellnr)
+SELECT DISTINCT(bp.bestellnr)
+FROM bestellposition bp
 WHERE bp.lieferungsnr IS NULL;
 ```
 
@@ -228,9 +263,9 @@ Geben Sie die Personen aus, die mindestens 18 Jahre alt sind.
 
 #### Lösung
 ```sql
-SELECT p.Name
+SELECT p.name
 FROM person p
-WHERE p.GEBURTSDATUM < (sysdate - INTERVAL '18' YEAR);
+WHERE p.geburtsdatum < (sysdate - INTERVAL '18' YEAR);
 ```
 
 ### Aufgabe 16
@@ -238,9 +273,9 @@ Geben Sie alle Personen aus, deren Namen zwischen fünf und zehn Zeichen lang si
 
 #### Lösung
 ```sql
-SELECT p.Name
-FROM Person p
-WHERE LENGTH(p.Name) > 4
-AND LENGTH(p.Name) < 11
-AND p.Name LIKE '%-%';
+SELECT p.name
+FROM person p
+WHERE LENGTH(p.name) > 4
+AND LENGTH(p.name) < 11
+AND p.name LIKE '%-%';
 ```
